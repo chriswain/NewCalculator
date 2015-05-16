@@ -14,6 +14,8 @@ class ViewController: UIViewController {
     @IBOutlet weak var display: UILabel!
     
     var userTypingNumber: Bool = false
+    
+    var brain = CalculatorBrain()
 
     @IBAction func appendDigit(sender: UIButton) {
         let digit = sender.currentTitle!
@@ -35,30 +37,19 @@ class ViewController: UIViewController {
             enter()
         }
         
-        switch operation {
-        case "×": performOperation { $1 * $0 }
-        case "÷": performOperation { $1 / $0 }
-        case "+": performOperation { $1 + $0 }
-        case "−": performOperation { $1 - $0 }
-        default: break
-        }
         
     }
     
-    func performOperation(operation: (Double, Double) -> Double) {
-        if operandStack.count >= 2 {
-            displayValue = operation(operandStack.removeLast(), operandStack.removeLast())
-            enter()
-        }
-    }
-    
-    
-    var operandStack: [Double] = []
+  
+ 
    
     @IBAction func enter() {
         userTypingNumber = false
-        operandStack.append(displayValue)
-        println("operand stack = \(operandStack)")
+        if let result = brain.pushOperand(displayValue) {
+            displayValue = result
+        } else {
+            displayValue = 0
+        }
     }
     
     var displayValue: Double {
